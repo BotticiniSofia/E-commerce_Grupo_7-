@@ -1,0 +1,20 @@
+# Trabajo practico
+
+## Lista de pendientes
+
+Titulo | Asignado | Estado | Comentarios
+---|---|---|---
+Header | J | Listo
+Banner | J | Listo
+Footer | J |
+Card de producto | A | Pendiente
+Modal de carrito | 
+ |Modal detalle producto | S | Pendiente
+Fetch productos | 
+ |Lógica carrito JS | 
+ |Sección de productos | J | Listo
+Documentation | 
+ |Generación de texto para títulos y secciones del sitio | 
+ |CSS | 
+ |Definición de colores y fuente | 
+ |Imagen .ico |  |
