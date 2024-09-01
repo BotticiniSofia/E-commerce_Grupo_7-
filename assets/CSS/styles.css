@@ -3,37 +3,112 @@
   --large-font: "Kaisei Tokumin", serif;
   --small-font: "Poppins", sans-serif;
   --pink: #e5345b;
+  --white: #fff;
 }
 
 body{
-  background-color: none;
+    background-color: none;
 }
 
 /* Button */
 .btn:not(.nav-btns button){
-  background: #fff;
-  color: rgb(85, 85, 85);
-  padding: 10px 28px;
-  border-radius: 25px;
-  border: 1px solid rgb(85, 85, 85);
+    background: #fff;
+    color: rgb(85, 85, 85);
+    padding: 10px 28px;
+    border-radius: 25px;
+    border: 1px solid rgb(85, 85, 85);
 }
 
 .btn:not(.nav-btns button):hover {
-  background: var(--pink);
-  color: #fff;
-  border: var(--pink);
+    background: var(--pink);
+    color: #fff;
+    border: var(--pink);
 }
 
 /* Product image */
 .product-img img{
-  transition: all .3s ease;
+    transition: all .3s ease;
 }
 
 .product-img img:hover{
-  transform: scale(1.2);
+    transform: scale(1.2);
 }
 
 .product-img span{
-  top:20px;
-  right: 20px;
+    top:20px;
+    right: 20px;
+}
+
+/* Modal product image sizing */
+.modal-image-container {
+    width: 200px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+/* Modal product title line height */
+.card-title {
+    line-height: 54px;
+}
+
+/* Modal product description truncate text */
+.card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* MEDIA QUERIES */
+
+/* Medium screens (tablets, small laptops) */
+@media (max-width: 992px) {
+    .modal-image-container {
+        width: 150px;
+        height: 225px;
+    }
+
+    .card-title {
+        line-height: 44px;
+    }
+}
+
+/* Small screens (large smartphones, tablets in portrait mode) */
+@media (max-width: 768px) {
+    .modal-image-container {
+        width: 120px;
+        height: 180px;
+    }
+
+    .card-title {
+        line-height: 44px;
+    }
+
+    .card-text {
+        -webkit-line-clamp: 2;
+    }
+}
+
+/* Extra small screens (smartphones) */
+@media (max-width: 576px) {
+    .modal-image-container {
+        width: 120px;
+        height: 180px;
+    }
+
+    .card-title {
+        line-height: 24px;
+    }
+}
+
+/* Very small screens (small smartphones) */
+@media (max-width: 400px) {
+    .modal-image-container {
+        width: 120px;
+        height: 180px;
+    }
+
+    .card-title {
+        line-height: 24px;
+    }
 }
