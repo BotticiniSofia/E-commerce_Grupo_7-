@@ -1,3 +1,39 @@
+/* variables */
+:root {
+  --large-font: "Kaisei Tokumin", serif;
+  --small-font: "Poppins", sans-serif;
+  --pink: #e5345b;
+}
+
 body{
-  background-color: #333;
+  background-color: none;
+}
+
+/* Button */
+.btn:not(.nav-btns button){
+  background: #fff;
+  color: rgb(85, 85, 85);
+  padding: 10px 28px;
+  border-radius: 25px;
+  border: 1px solid rgb(85, 85, 85);
+}
+
+.btn:not(.nav-btns button):hover {
+  background: var(--pink);
+  color: #fff;
+  border: var(--pink);
+}
+
+/* Product image */
+.product-img img{
+  transition: all .3s ease;
+}
+
+.product-img img:hover{
+  transform: scale(1.2);
+}
+
+.product-img span{
+  top:20px;
+  right: 20px;
 }
