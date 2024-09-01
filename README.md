@@ -7,7 +7,7 @@ Titulo | Asignado | Estado | Comentarios
 Header | J | Listo
 Banner | J | Listo
 Footer | J |
-Card de producto | A | Pendiente
+Card de producto | A | Listo
 Modal de carrito | 
  |Modal detalle producto | S | Listo
 Fetch productos | A | Listo 
