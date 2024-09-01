@@ -18,6 +18,18 @@ const createElement = (tag, className, attributes = {}) => {
     return element;
 };
 
+/**
+ * Create an HTML code for card product with the details of a product.
+ *
+ * @param {Object} product - The product details.
+ * @param {string} product.title - The title of the product.
+ * @param {string} product.description - A description of the product.
+ * @param {string} product.price - The price of the product.
+ * @param {string} product.image - The URL of the product image.
+ * @param {string} product.category - The category of the product
+ * @param {number} index 
+ * @returns {string} The HTML code
+ */
 const createProductCard = (product, index) => {
     const productCard = createElement('div', 'col-md-6 col-lg-4 col-xl-3 p-2');
   
@@ -45,9 +57,9 @@ const createProductCard = (product, index) => {
   
     // Description Container
     const descriptionContainer = createElement('div', 'text-center');
-    const description = createElement('p', 'text-capitalize mt-3 mb-1');
-    description.textContent = product.description.trim().slice(0, 25) + '...';
-    descriptionContainer.appendChild(description);
+    const title = createElement('p', 'text-capitalize mt-3 mb-1');
+    title.textContent = product.title.trim().slice(0, 25) + '...';
+    descriptionContainer.appendChild(title);
   
     const price = createElement('span', 'fw-bold d-block');
     price.textContent = '$' + product.price;
@@ -59,13 +71,12 @@ const createProductCard = (product, index) => {
     const viewButton = createElement('a', 'btn btn-primary mt-3 view-product', {
         href: '#',
         'data-bs-toggle': 'modal',
-        'data-bs-target': '#product',
+        'data-bs-target': '#product-modal',
         'data-index': index,
     });
     viewButton.textContent = 'Ver';
   
-    const addToCartButton = createElement('a', 'btn btn-primary mt-3 add-to-cart', {
-        href: '#',
+    const addToCartButton = createElement('button', 'btn btn-primary mt-3 add-to-cart', {
         'data-index': index,
     });
     const shoppingCartIcon = createElement('i', 'fa fa-shopping-cart px-1');
@@ -84,13 +95,73 @@ const createProductCard = (product, index) => {
 const renderProducts = async () => {
     const products = await fetchProducts();
     const productList = document.querySelector('.product-list');
-  
+ 
     products.forEach((product, index) => {
         const productCard = createProductCard(product, index);
+
         productList.appendChild(productCard);
+
+        productCard.querySelectorAll('.view-product').forEach(button => {
+            button.addEventListener('click', function() {
+                fillModalWithProduct(product);
+            });
+        });
     });
 };
 
-renderProducts()
+const getCategoryBadgeColor = (badge, category) => {
+    // Remove previous color classes
+    badge.classList.remove('text-bg-secondary', 'text-bg-warning', 'text-bg-success', 'text-bg-danger', 'text-bg-dark');
 
-  
+    // Set badge color based on category
+    switch (category.toLowerCase()) {
+        case 'electronics':
+            badge.classList.add('text-bg-secondary');
+            break;
+        case 'jewelery':
+            badge.classList.add('text-bg-warning');
+            break;
+        case "men's clothing":
+            badge.classList.add('text-bg-dark');
+            break;
+        case "women's clothing":
+            badge.classList.add('text-bg-danger');
+            break;
+        default:
+            badge.classList.add('text-bg-success'); // Default color if no match
+    }
+};
+
+/**
+ * Fill the modal with the product details
+ * 
+ * @param {Object} product - The product details.
+ * @param {string} product.title - The title of the product.
+ * @param {string} product.description - A description of the product.
+ * @param {string} product.price - The price of the product.
+ * @param {string} product.image - The URL of the product image.
+ * @param {string} product.category - The category of the product
+ */
+const fillModalWithProduct = (product) => {
+    const modalImage = document.getElementById('modal-product-img');
+    modalImage.src = product.image;
+    modalImage.alt = product.title;
+
+    // Apply the same style as in the dynamically created image
+    modalImage.style.objectFit = 'contain';
+    modalImage.style.width = '100%';
+    modalImage.style.height = '100%';
+
+    // Badge element
+    const categoryBadge = document.getElementById('modal-product-category');
+    getCategoryBadgeColor(categoryBadge, product.category);
+
+    document.getElementById('modal-product-img').alt = product.title;
+    document.querySelector('.card-title').textContent = product.title;
+    document.querySelector('.card-text').textContent = product.description;
+    document.getElementById('modal-product-price').textContent = `$${product.price}`;
+    document.getElementById('modal-product-category').textContent = `${product.category}`;
+}
+
+
+renderProducts();
