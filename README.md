@@ -6,9 +6,9 @@ Titulo | Asignado | Estado | Comentarios
 ---|---|---|---
 Header | J | Listo
 Banner | J | Listo
-Footer | J |
+Footer | J | Listo
 Card de producto | A | Listo
-Modal de carrito | 
+Modal de carrito | J | Listo
  |Modal detalle producto | S | Listo
 Fetch productos | A | Listo 
  |Lógica carrito JS | A | Pendiente

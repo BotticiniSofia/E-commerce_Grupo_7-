@@ -10,6 +10,26 @@ body{
     background-color: none;
 }
 
+.bg-primary {
+  background: var(--pink) !important;
+}
+
+.text-primary{
+  color: var(--pink) !important;
+}
+
+/* title */
+.title h2::before {
+  position: absolute;
+  content: "";
+  width: 4px;
+  height: 50px;
+  background: var(--pink);
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 /* Button */
 .btn:not(.nav-btns button){
     background: #fff;
@@ -57,6 +77,10 @@ body{
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+footer i:hover{
+  color: var(--pink);
 }
 
 /* MEDIA QUERIES */
