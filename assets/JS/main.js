@@ -163,5 +163,28 @@ const fillModalWithProduct = (product) => {
     document.getElementById('modal-product-category').textContent = `${product.category}`;
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-section');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+
+        // Muestra el mensaje de éxito
+        responseMessage.textContent = '¡Enviado exitosamente!';
+        responseMessage.style.display = 'block';
+        responseMessage.style.opacity = 1;
+
+        // Desvanece el mensaje después de 3 segundos
+        setTimeout(function() {
+            responseMessage.style.opacity = 0; 
+            
+            setTimeout(function() {
+                responseMessage.style.display = 'none'; 
+            }, 1000); 
+        }, 3000); 
+        form.reset();
+    });
+});
 
 renderProducts();
