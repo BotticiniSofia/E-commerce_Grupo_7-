@@ -32,9 +32,9 @@
                     <i class="fa fa-shopping-cart"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge bg-primary" id="cart-badge">0</span>
                 </button>
-                <button type="button" class="btn position-relative">
+                <button type="button" class="btn position-relative" data-bs-toggle="modal" data-bs-target="#favorites-modal">
                     <i class="fa fa-heart"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span> 
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary" id="favorites-badge">0</span> 
                     <!-- TODO  Verificar lista de favoritos-->
                 </button>
                 <button class="btn position-relative" type="button">
@@ -159,6 +159,35 @@
         </div>
       </div>
     </div>
+    <!-- Favorites Modal -->
+    <div class="modal fade" id="favorites-modal" tabindex="-1" aria-labelledby="favoritesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="favoritesLabel">Favoritos</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody id="favorites-body">
+                  <!-- Favorite products will be populated here -->
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+    </div>      
     <!-- Form Section -->
     <section id="form" class="py-5">
       <div class="container">

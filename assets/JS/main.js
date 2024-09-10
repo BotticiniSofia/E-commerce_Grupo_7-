@@ -3,8 +3,6 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const fetchProducts = async () => {
     const products = await fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
-
-    console.log(products)
   
     return products;
 }
@@ -58,6 +56,7 @@ const addToCart = (product) => {
 // Function to initialize the cart UI when the page loads
 const initializeCartUI = () => {
     updateCartUI();
+    fillFavoritesModal();
 };
 
 // Function to remove a product from the cart
@@ -83,13 +82,10 @@ const fillCartModal = () => {
     // Clear the cart body first to avoid duplication
     cartBody.innerHTML = '';
 
-    // Get the cart from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Variable to keep track of total price
     let totalPrice = 0;
 
-    // Loop through the cart items and create rows for each product
     cart.forEach(product => {
         const row = document.createElement('tr');
 
@@ -113,10 +109,9 @@ const fillCartModal = () => {
         removeButton.className = 'btn btn-danger btn-sm';
         removeButton.textContent = 'Eliminar';
 
-        // Event listener to remove the product from the cart
         removeButton.addEventListener('click', () => {
             removeFromCart(product.id);
-            fillCartModal();  // Refresh the modal content after removing the product
+            fillCartModal();
         });
 
         removeButtonCell.appendChild(removeButton);
@@ -124,18 +119,16 @@ const fillCartModal = () => {
         // Append cells to the row
         row.appendChild(titleCell);
         row.appendChild(categoryCell);
-        row.appendChild(quantityCell); // Add quantity control
+        row.appendChild(quantityCell);
         row.appendChild(priceCell);
         row.appendChild(removeButtonCell);
 
-        // Append the row to the cart body
         cartBody.appendChild(row);
 
         // Update total price
         totalPrice += product.price * product.quantity;
     });
 
-    // Update the total price in the modal
     totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
 };
 
@@ -187,7 +180,21 @@ const updateProductQuantity = (productId, change) => {
     fillCartModal();
 };
 
+const getFavorites = () => {
+    return JSON.parse(localStorage.getItem('favorites')) || [];
+};
 
+const saveFavorites = (favorites) => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+};
+
+const updateFavoritesBadge = () => {
+    const favorites = getFavorites();
+
+    const badge = document.querySelector('#favorites-badge');
+
+    badge.textContent = favorites.length;
+};
 
 /**
  * Create an HTML code for card product with the details of a product.
@@ -203,42 +210,70 @@ const updateProductQuantity = (productId, change) => {
  */
 const createProductCard = (product, index) => {
     const productCard = createElement('div', 'col-md-6 col-lg-4 col-xl-3 p-2');
-  
+
     // Image Container with fixed height
     const imgContainer = createElement('div', 'product-img position-relative overflow-hidden', {
         style: 'height: 250px;' // Adjust the height as needed
     });
-  
+
     // Image with Bootstrap class and object-fit cover
     const img = createElement('img', 'w-100 h-100', {
         src: product.image,
         alt: product.title,
-        style: 'object-fit: contain;' // Ensures the image covers the container area
+        style: 'object-fit: contain;'
     });
-  
+
     imgContainer.appendChild(img);
-  
+
     // Heart Icon
     const heartIcon = createElement('span', 'position-absolute d-flex align-items-center justify-content-center text-primary fs-4');
-    const heartElement = createElement('i', 'fas fa-heart');
+    const heartElement = createElement('i', 'fas fa-heart', {
+        'data-product-id': product.id // Store product ID for later use
+    });
     heartIcon.appendChild(heartElement);
     imgContainer.appendChild(heartIcon);
-  
+
+    // Get favorites from localStorage
+    const favorites = getFavorites();
+    const isFavorited = favorites.some(fav => fav.id === product.id);
+    heartElement.classList.add(isFavorited ? 'text-danger' : 'text-secondary');
+
+    heartIcon.addEventListener('click', () => {
+        let favorites = getFavorites();
+
+        if (favorites.some(fav => fav.id === product.id)) {
+            // Remove from favorites
+            favorites = favorites.filter(fav => fav.id !== product.id);
+            heartElement.classList.remove('text-danger');
+            heartElement.classList.add('text-secondary');
+        } else {
+            // Add to favorites
+            favorites.push(product);
+            heartElement.classList.remove('text-secondary');
+            heartElement.classList.add('text-danger');
+        }
+
+        saveFavorites(favorites);
+        updateFavoritesBadge(); // Update the badge count
+        updateHeartIcons();
+        fillFavoritesModal();
+    });
+
     productCard.appendChild(imgContainer);
-  
+
     // Description Container
     const descriptionContainer = createElement('div', 'text-center');
     const title = createElement('p', 'text-capitalize mt-3 mb-1');
     title.textContent = product.title.trim().slice(0, 25) + '...';
     descriptionContainer.appendChild(title);
-  
+
     const price = createElement('span', 'fw-bold d-block');
     price.textContent = '$' + product.price;
     descriptionContainer.appendChild(price);
-  
+
     // Button Container
     const btnContainer = createElement('div', 'd-flex justify-content-around');
-  
+
     const viewButton = createElement('a', 'btn btn-primary mt-3 view-product', {
         href: '#',
         'data-bs-toggle': 'modal',
@@ -246,23 +281,22 @@ const createProductCard = (product, index) => {
         'data-index': index,
     });
     viewButton.textContent = 'Ver';
-  
+
     const addToCartButton = createElement('button', 'btn btn-primary mt-3 add-to-cart', {
         'data-index': index,
     });
     const shoppingCartIcon = createElement('i', 'fa fa-shopping-cart px-1');
     addToCartButton.appendChild(shoppingCartIcon);
     addToCartButton.appendChild(document.createTextNode('Agregar'));
-    addToCartButton.addEventListener('click', () => addToCart(product));
-  
+
     btnContainer.appendChild(viewButton);
     btnContainer.appendChild(addToCartButton);
-  
+
     descriptionContainer.appendChild(btnContainer);
     productCard.appendChild(descriptionContainer);
-  
+
     return productCard;
-};  
+};
 
 const renderProducts = async () => {
     const products = await fetchProducts();
@@ -335,6 +369,69 @@ const fillModalWithProduct = (product) => {
     document.getElementById('modal-product-category').textContent = `${product.category}`;
 }
 
+const updateHeartIcons = () => {
+    const favorites = getFavorites();
+    const allHeartIcons = document.querySelectorAll('.fa-heart');
+
+    allHeartIcons.forEach(icon => {
+        const productId = parseInt(icon.getAttribute('data-product-id'), 10);
+        if (favorites.some(fav => fav.id === productId)) {
+            icon.classList.add('text-danger');
+            icon.classList.remove('text-secondary');
+        } else {
+            icon.classList.add('text-secondary');
+            icon.classList.remove('text-danger');
+        }
+    });
+};
+
+
+// Function to fill the favorites modal with favorite products
+const fillFavoritesModal = () => {
+    const favorites = getFavorites();
+    const favoritesBody = document.getElementById('favorites-body');
+    
+    // Clear the current content of the table body
+    favoritesBody.innerHTML = '';
+
+    favorites.forEach(product => {
+        const row = createElement('tr');
+        
+        const titleCell = createElement('td');
+        titleCell.textContent = product.title;
+
+        const categoryCell = createElement('td');
+        categoryCell.textContent = product.category;
+
+        const priceCell = createElement('td');
+        priceCell.textContent = `$${product.price}`;
+
+        const removeCell = createElement('td');
+        const removeButton = createElement('button', 'btn btn-danger btn-sm');
+        removeButton.textContent = 'Eliminar';
+        removeButton.addEventListener('click', () => {
+            // Remove from favorites
+            let favorites = getFavorites();
+            favorites = favorites.filter(fav => fav.id !== product.id);
+            saveFavorites(favorites);
+
+            // Update the heart icons in product cards
+            updateHeartIcons();
+
+            fillFavoritesModal();
+            updateFavoritesBadge();
+        });
+        removeCell.appendChild(removeButton);
+
+        row.appendChild(titleCell);
+        row.appendChild(categoryCell);
+        row.appendChild(priceCell);
+        row.appendChild(removeCell);
+
+        favoritesBody.appendChild(row);
+    });
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form-section');
     const responseMessage = document.getElementById('responseMessage');
@@ -375,6 +472,8 @@ const clearCart = () => {
 document.addEventListener('DOMContentLoaded', () => {
     initializeCartUI();
     renderProducts();
+    updateFavoritesBadge();
+    updateHeartIcons();
 
     // Handle the "Comprar" button click
     document.querySelector('#cart .btn-primary').addEventListener('click', () => {
