@@ -30,7 +30,7 @@
             <div class="order-lg-2 nav-btns">
                 <button type="button" class="btn position-relative" data-bs-toggle="modal" data-bs-target="#cart">
                     <i class="fa fa-shopping-cart"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-primary" id="cart-badge">0</span>
                 </button>
                 <button type="button" class="btn position-relative">
                     <i class="fa fa-heart"></i>
@@ -122,7 +122,7 @@
         </div>
     </div>
     <!-- Cart Modal -->
-    <div class="modal fade" id="cart" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
+    <div class="modal fade modal-lg" id="cart" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -135,15 +135,18 @@
                 <tr>
                   <th scope="col">Titulo</th>
                   <th scope="col">Categoría</th>
+                  <th scope="col">Cantidad</th>
                   <th scope="col">Precio</th>
-                  <th scope="col"></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody id="cart-body">
               </tbody>
               <tfoot>
                 <tr>
-                  <th colspan="2" class="text-center">Total</th>
+                  <th colspan="2" class="text-left">Total</th>
+                  <th></th>
+                  <th></th>
                   <th id="total-price">$0</th>
                 </tr>
               </tfoot>
@@ -238,6 +241,18 @@
       </div>
     </footer>
     
+    <!-- Toast Notification -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="success-toast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Éxito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                ¡Compra realizada con éxito!
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

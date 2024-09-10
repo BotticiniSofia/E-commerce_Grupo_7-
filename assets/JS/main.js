@@ -1,6 +1,10 @@
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 const fetchProducts = async () => {
     const products = await fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
+
+    console.log(products)
   
     return products;
 }
@@ -17,6 +21,173 @@ const createElement = (tag, className, attributes = {}) => {
 
     return element;
 };
+
+// UPDATE CART BADGE
+const updateCartUI = () => {
+    const cartBadge = document.getElementById('cart-badge');
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const totalItems = cart.reduce((total, product) => total + product.quantity, 0);
+
+    cartBadge.textContent = totalItems;
+};
+
+// SAVE ON LOCAL STORAGE
+const saveCartToLocalStorage = () => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+};
+
+const addToCart = (product) => {
+    // Check if the product already exists in the cart
+    const existingProduct = cart.find(item => item.id === product.id);
+
+    if (existingProduct) {
+        // If the product already exists, increase its quantity
+        existingProduct.quantity += 1;
+    } else {
+        // Add the product to the cart with a quantity property
+        cart.push({ ...product, quantity: 1 });
+    }
+
+    saveCartToLocalStorage();
+
+    updateCartUI();
+};
+
+// Function to initialize the cart UI when the page loads
+const initializeCartUI = () => {
+    updateCartUI();
+};
+
+// Function to remove a product from the cart
+const removeFromCart = (productId) => {
+    // Get the cart from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Remove the product with the matching ID
+    cart = cart.filter(product => product.id !== productId);
+
+    // Save the updated cart back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Update the cart badge
+    updateCartUI();
+};
+
+// Function to fill the cart modal with products and add quantity controls
+const fillCartModal = () => {
+    const cartBody = document.getElementById('cart-body');
+    const totalPriceElement = document.getElementById('total-price');
+
+    // Clear the cart body first to avoid duplication
+    cartBody.innerHTML = '';
+
+    // Get the cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Variable to keep track of total price
+    let totalPrice = 0;
+
+    // Loop through the cart items and create rows for each product
+    cart.forEach(product => {
+        const row = document.createElement('tr');
+
+        const titleCell = document.createElement('td');
+        titleCell.textContent = product.title;
+
+        const categoryCell = document.createElement('td');
+        categoryCell.textContent = product.category;
+
+        const priceCell = document.createElement('td');
+        priceCell.textContent = `$${(product.price * product.quantity).toFixed(2)}`;
+
+        // Quantity control cell
+        const quantityCell = document.createElement('td');
+        const quantityControl = createQuantityControl(product.id, product.quantity);
+        quantityCell.appendChild(quantityControl);
+
+        // Remove button cell
+        const removeButtonCell = document.createElement('td');
+        const removeButton = document.createElement('button');
+        removeButton.className = 'btn btn-danger btn-sm';
+        removeButton.textContent = 'Eliminar';
+
+        // Event listener to remove the product from the cart
+        removeButton.addEventListener('click', () => {
+            removeFromCart(product.id);
+            fillCartModal();  // Refresh the modal content after removing the product
+        });
+
+        removeButtonCell.appendChild(removeButton);
+
+        // Append cells to the row
+        row.appendChild(titleCell);
+        row.appendChild(categoryCell);
+        row.appendChild(quantityCell); // Add quantity control
+        row.appendChild(priceCell);
+        row.appendChild(removeButtonCell);
+
+        // Append the row to the cart body
+        cartBody.appendChild(row);
+
+        // Update total price
+        totalPrice += product.price * product.quantity;
+    });
+
+    // Update the total price in the modal
+    totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
+};
+
+// Helper function to create a quantity control (counter)
+const createQuantityControl = (productId, quantity) => {
+    const container = document.createElement('div');
+    container.className = 'd-flex align-items-center';
+
+    const decrementButton = document.createElement('button');
+    decrementButton.className = 'btn btn-sm btn-outline-secondary';
+    decrementButton.textContent = '-';
+    decrementButton.addEventListener('click', () => {
+        updateProductQuantity(productId, -1);
+    });
+
+    const quantityDisplay = document.createElement('span');
+    quantityDisplay.className = 'mx-2';
+    quantityDisplay.textContent = quantity;
+
+    const incrementButton = document.createElement('button');
+    incrementButton.className = 'btn btn-sm btn-outline-secondary';
+    incrementButton.textContent = '+';
+    incrementButton.addEventListener('click', () => {
+        updateProductQuantity(productId, 1);
+    });
+
+    container.appendChild(decrementButton);
+    container.appendChild(quantityDisplay);
+    container.appendChild(incrementButton);
+
+    return container;
+};
+
+// Function to update the product quantity in the cart
+const updateProductQuantity = (productId, change) => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Find the product and update its quantity
+    const product = cart.find(item => item.id === productId);
+    if (product) {
+        product.quantity = Math.max(1, product.quantity + change); // Ensure quantity is at least 1
+    }
+
+    // Save the updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Update the cart UI and modal
+    updateCartUI();
+    fillCartModal();
+};
+
+
 
 /**
  * Create an HTML code for card product with the details of a product.
@@ -82,6 +253,7 @@ const createProductCard = (product, index) => {
     const shoppingCartIcon = createElement('i', 'fa fa-shopping-cart px-1');
     addToCartButton.appendChild(shoppingCartIcon);
     addToCartButton.appendChild(document.createTextNode('Agregar'));
+    addToCartButton.addEventListener('click', () => addToCart(product));
   
     btnContainer.appendChild(viewButton);
     btnContainer.appendChild(addToCartButton);
@@ -187,4 +359,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-renderProducts();
+// Function to show a success toast notification
+const showSuccessToast = () => {
+    const toast = new bootstrap.Toast(document.getElementById('success-toast'));
+    toast.show();
+};
+
+// Function to clear the cart from localStorage and update the UI
+const clearCart = () => {
+    localStorage.removeItem('cart');
+    updateCartUI();
+    fillCartModal(); // Clear the cart modal content
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCartUI();
+    renderProducts();
+
+    // Handle the "Comprar" button click
+    document.querySelector('#cart .btn-primary').addEventListener('click', () => {
+        showSuccessToast();
+        clearCart();
+    });
+});
+
+// Event listener to open the cart modal and fill it with products
+document.getElementById('cart').addEventListener('show.bs.modal', fillCartModal);
