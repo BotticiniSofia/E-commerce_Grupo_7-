@@ -11,7 +11,7 @@ Card de producto | A | Listo
 Modal de carrito | J | Listo
  |Modal detalle producto | S | Listo
 Fetch productos | A | Listo 
- |Lógica carrito JS | A | Pendiente
+ |Lógica carrito JS | A | Listo
  |Sección de productos | J | Listo
 Documentation | 
  |Generación de texto para títulos y secciones del sitio | S | Pendiente
