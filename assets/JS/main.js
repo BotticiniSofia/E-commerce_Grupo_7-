@@ -499,17 +499,19 @@ const clearCart = () => {
     fillCartModal(); // Clear the cart modal content
 };
 
+const buyCart = () => {
+    showSuccessToast();
+    clearCart();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeCartUI();
     renderProducts();
     updateFavoritesBadge();
     updateHeartIcons();
 
-    // Handle the "Comprar" button click
-    document.querySelector('#cart .btn-primary').addEventListener('click', () => {
-        showSuccessToast();
-        clearCart();
-    });
+    document.getElementById('clear-cart').addEventListener('click', clearCart);
+    document.getElementById('buy-button').addEventListener('click', buyCart);
 });
 
 // Event listener to open the cart modal and fill it with products
