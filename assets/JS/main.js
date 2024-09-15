@@ -36,21 +36,24 @@ const saveCartToLocalStorage = () => {
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
-const addToCart = (product) => {
+const addToCart = (product, quantity = 1) => {
+    // Always refresh the cart from localStorage before adding a new item
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+
     // Check if the product already exists in the cart
     const existingProduct = cart.find(item => item.id === product.id);
 
     if (existingProduct) {
         // If the product already exists, increase its quantity
-        existingProduct.quantity += 1;
+        existingProduct.quantity += quantity;
     } else {
-        // Add the product to the cart with a quantity property
-        cart.push({ ...product, quantity: 1 });
+        // Add the product to the cart with the specified quantity
+        cart.push({ ...product, quantity });
     }
 
     saveCartToLocalStorage();
-
     updateCartUI();
+    showSuccessAddToast();
 };
 
 // Function to initialize the cart UI when the page loads
@@ -288,6 +291,7 @@ const createProductCard = (product, index) => {
     const shoppingCartIcon = createElement('i', 'fa fa-shopping-cart px-1');
     addToCartButton.appendChild(shoppingCartIcon);
     addToCartButton.appendChild(document.createTextNode('Agregar'));
+    addToCartButton.onclick = () => addToCart(product);
 
     btnContainer.appendChild(viewButton);
     btnContainer.appendChild(addToCartButton);
@@ -367,6 +371,27 @@ const fillModalWithProduct = (product) => {
     document.querySelector('.card-text').textContent = product.description;
     document.getElementById('modal-product-price').textContent = `$${product.price}`;
     document.getElementById('modal-product-category').textContent = `${product.category}`;
+
+    let quantity = 1;
+    const quantityDisplay = document.getElementById('modal-quantity');
+    quantityDisplay.textContent = quantity;
+
+    // Increase quantity
+    document.getElementById('modal-increase-quantity').addEventListener('click', () => {
+        quantity++;
+        quantityDisplay.textContent = quantity;
+    });
+
+    // Decrease quantity, but don't go below 1
+    document.getElementById('modal-decrease-quantity').addEventListener('click', () => {
+        if (quantity > 1) {
+            quantity--;
+            quantityDisplay.textContent = quantity;
+        }
+    });
+
+    const addToCartButton = document.getElementById('modal-add-to-cart');
+    addToCartButton.onclick = () => addToCart(product, quantity);
 }
 
 const updateHeartIcons = () => {
@@ -459,6 +484,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to show a success toast notification
 const showSuccessToast = () => {
     const toast = new bootstrap.Toast(document.getElementById('success-toast'));
+    toast.show();
+};
+
+const showSuccessAddToast = () => {
+    const toast = new bootstrap.Toast(document.getElementById('success-add-toast'));
     toast.show();
 };
 
