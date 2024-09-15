@@ -81,11 +81,16 @@ const removeFromCart = (productId) => {
 const fillCartModal = () => {
     const cartBody = document.getElementById('cart-body');
     const totalPriceElement = document.getElementById('total-price');
+    const buyButton = document.getElementById('buy-button');
 
     // Clear the cart body first to avoid duplication
     cartBody.innerHTML = '';
 
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (!cart.length) {
+        buyButton.setAttribute('disabled', true);
+    }
 
     let totalPrice = 0;
 
