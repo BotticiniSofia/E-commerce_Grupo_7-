@@ -231,7 +231,8 @@ const createProductCard = (product, index) => {
     // Heart Icon
     const heartIcon = createElement('span', 'position-absolute d-flex align-items-center justify-content-center text-primary fs-4');
     const heartElement = createElement('i', 'fas fa-heart', {
-        'data-product-id': product.id // Store product ID for later use
+        'data-product-id': product.id,
+        'role': 'button'
     });
     heartIcon.appendChild(heartElement);
     imgContainer.appendChild(heartIcon);
