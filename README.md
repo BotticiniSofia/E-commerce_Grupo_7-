@@ -13,8 +13,7 @@ Modal de carrito | J | Listo
 Fetch productos | A | Listo 
  |Lógica carrito JS | A | Listo
  |Sección de productos | J | Listo
-Documentation | 
- |Generación de texto para títulos y secciones del sitio | S | Pendiente
- |CSS | 
- |Definición de colores y fuente | 
- |Imagen .ico |  |
+ |Generación de texto para títulos y secciones del sitio | S | Listo
+ |CSS | A,J,S | Listo
+ Imágenes del banner | J | Pendiente
+ 
