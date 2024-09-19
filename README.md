@@ -15,6 +15,6 @@ Fetch productos | A | Listo
  |Sección de productos | J | Listo
  |Generación de texto para títulos y secciones del sitio | S | Listo
  |CSS | A,J,S | Listo
- Imágenes del banner | J | Pendiente
+ Imágenes del banner | J | Listo
  Responsive modal carrito y favoritos | A | Pendiente
  Buscador | S | Pendiente

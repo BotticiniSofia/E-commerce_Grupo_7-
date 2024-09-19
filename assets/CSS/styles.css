@@ -49,6 +49,11 @@ body{
     border: var(--pink);
 }
 
+#header {
+  background: url(../images/banner.png) top/cover no-repeat;
+  padding-top: 104px;
+}
+
 /* Product image */
 .product-img img{
     transition: all .3s ease;
