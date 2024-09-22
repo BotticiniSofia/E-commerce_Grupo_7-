@@ -204,6 +204,27 @@ const updateFavoritesBadge = () => {
     badge.textContent = favorites.length;
 };
 
+
+
+// Function to filter products
+
+const searchInput = document.getElementById('search-input');
+
+searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const productCards = document.querySelectorAll('.product-list .col-md-6');
+
+    productCards.forEach(card => {
+        const productTitle = card.querySelector('p').textContent.toLowerCase();
+        if (productTitle.includes(searchTerm)) {
+            card.style.display = ''; 
+        } else {
+            card.style.display = 'none'; 
+        }
+    });
+});
+
+
 /**
  * Create an HTML code for card product with the details of a product.
  *
