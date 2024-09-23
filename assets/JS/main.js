@@ -20,6 +20,29 @@ const createElement = (tag, className, attributes = {}) => {
     return element;
 };
 
+const getCategoryBadgeColor = (badge, category) => {
+    // Remove previous color classes
+    badge.classList.remove('text-bg-secondary', 'text-bg-warning', 'text-bg-success', 'text-bg-danger', 'text-bg-dark');
+
+    // Set badge color based on category
+    switch (category.toLowerCase()) {
+        case 'electronics':
+            badge.classList.add('text-bg-secondary');
+            break;
+        case 'jewelery':
+            badge.classList.add('text-bg-warning');
+            break;
+        case "men's clothing":
+            badge.classList.add('text-bg-dark');
+            break;
+        case "women's clothing":
+            badge.classList.add('text-bg-danger');
+            break;
+        default:
+            badge.classList.add('text-bg-success'); // Default color if no match
+    }
+};
+
 // UPDATE CART BADGE
 const updateCartUI = () => {
     const cartBadge = document.getElementById('cart-badge');
@@ -95,26 +118,42 @@ const fillCartModal = () => {
     let totalPrice = 0;
 
     cart.forEach(product => {
-        const row = document.createElement('tr');
+        const row = document.createElement('div');
+        row.className = 'row py-2 border-bottom align-items-center';
 
-        const titleCell = document.createElement('td');
-        titleCell.textContent = product.title;
+        const titleCell = document.createElement('div');
+        titleCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-3 text-center text-lg-left';
+        titleCell.innerHTML = `<p class="mb-0 text-truncate">${product.title}</p>`;
 
-        const categoryCell = document.createElement('td');
-        categoryCell.textContent = product.category;
+        const categoryCell = document.createElement('div');
+        categoryCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-2 text-center text-lg-left mt-2 mt-lg-0';
 
-        const priceCell = document.createElement('td');
+        const categoryBadge = document.createElement('div')
+        categoryBadge.className = 'badge'
+        categoryCell.appendChild(categoryBadge)
+        categoryBadge.textContent = product.category;
+        categoryBadge.id = `product_${product.id}`
+
+        getCategoryBadgeColor(categoryBadge, product.category)
+
+        const priceCell = document.createElement('div');
+        priceCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-2 text-center text-lg-start mt-2 mt-lg-0 fw-bold';
         priceCell.textContent = `$${(product.price * product.quantity).toFixed(2)}`;
 
         // Quantity control cell
-        const quantityCell = document.createElement('td');
+        const quantityCell = document.createElement('div');
+        quantityCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-3 text-center text-lg-end mt-2 mt-lg-0';
+        const quantityControlWrapper = document.createElement('div');
+        quantityControlWrapper.className = 'd-flex justify-content-center'; // Center on mobile, left-align on larger screens
+        quantityCell.appendChild(quantityControlWrapper)
         const quantityControl = createQuantityControl(product.id, product.quantity);
-        quantityCell.appendChild(quantityControl);
+        quantityControlWrapper.appendChild(quantityControl);
 
         // Remove button cell
-        const removeButtonCell = document.createElement('td');
+        const removeButtonCell = document.createElement('div');
+        removeButtonCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-2 text-center text-md-left mt-2 mt-lg-0';
         const removeButton = document.createElement('button');
-        removeButton.className = 'btn btn-danger btn-sm';
+        removeButton.className = 'btn btn-danger btn-sm w-100';
         removeButton.textContent = 'Eliminar';
 
         removeButton.addEventListener('click', () => {
@@ -137,6 +176,7 @@ const fillCartModal = () => {
         totalPrice += product.price * product.quantity;
     });
 
+    totalPriceElement.className = 'fw-bold'
     totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
 };
 
@@ -346,29 +386,6 @@ const renderProducts = async () => {
     });
 };
 
-const getCategoryBadgeColor = (badge, category) => {
-    // Remove previous color classes
-    badge.classList.remove('text-bg-secondary', 'text-bg-warning', 'text-bg-success', 'text-bg-danger', 'text-bg-dark');
-
-    // Set badge color based on category
-    switch (category.toLowerCase()) {
-        case 'electronics':
-            badge.classList.add('text-bg-secondary');
-            break;
-        case 'jewelery':
-            badge.classList.add('text-bg-warning');
-            break;
-        case "men's clothing":
-            badge.classList.add('text-bg-dark');
-            break;
-        case "women's clothing":
-            badge.classList.add('text-bg-danger');
-            break;
-        default:
-            badge.classList.add('text-bg-success'); // Default color if no match
-    }
-};
-
 /**
  * Fill the modal with the product details
  * 
@@ -437,29 +454,41 @@ const updateHeartIcons = () => {
     });
 };
 
-
 // Function to fill the favorites modal with favorite products
 const fillFavoritesModal = () => {
     const favorites = getFavorites();
     const favoritesBody = document.getElementById('favorites-body');
-    
-    // Clear the current content of the table body
+
     favoritesBody.innerHTML = '';
 
     favorites.forEach(product => {
-        const row = createElement('tr');
+        const row = document.createElement('div');
+        row.className = 'row py-2 border-bottom align-items-center';
+
+        // Title cell
+        const titleCell = document.createElement('div');
+        titleCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-4 text-center text-lg-left';
+        titleCell.innerHTML = `<p class="mb-0 text-truncate">${product.title}</p>`;
         
-        const titleCell = createElement('td');
-        titleCell.textContent = product.title;
+        // Category cell
+        const categoryCell = document.createElement('div');
+        categoryCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-3 text-center text-lg-left mt-2 mt-lg-0';
+        const categoryBadge = document.createElement('div');
+        categoryBadge.className = 'badge';
+        categoryBadge.textContent = product.category;
+        getCategoryBadgeColor(categoryBadge, product.category);
+        categoryCell.appendChild(categoryBadge);
 
-        const categoryCell = createElement('td');
-        categoryCell.textContent = product.category;
-
-        const priceCell = createElement('td');
+        // Price cell
+        const priceCell = document.createElement('div');
+        priceCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-3 text-center text-lg-start mt-2 mt-lg-0 fw-bold';
         priceCell.textContent = `$${product.price}`;
 
-        const removeCell = createElement('td');
-        const removeButton = createElement('button', 'btn btn-danger btn-sm');
+        // Remove button cell
+        const removeCell = document.createElement('div');
+        removeCell.className = 'col-xs-12 col-sm-12 col-md-12 col-lg-2 text-center text-md-left mt-2 mt-lg-0';
+        const removeButton = document.createElement('button');
+        removeButton.className = 'btn btn-danger btn-sm w-100';
         removeButton.textContent = 'Eliminar';
         removeButton.addEventListener('click', () => {
             // Remove from favorites

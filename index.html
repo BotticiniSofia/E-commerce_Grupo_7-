@@ -102,76 +102,59 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                        <div class="card">
-                            <div class="modal-image-container">
-                                <img src="" class="card-img-top" alt="" id="modal-product-img">
-                            </div>
-                            <div class="card-body">
-                                <h2 class="card-title display-6 text-truncate"></h2>
-                                <p class="card-text lead"></p>
-                                <span class="badge rounded-pill" id="modal-product-category"></span>
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <div class="quantity-container d-flex align-items-center">
-                                        <button type="button" id="modal-decrease-quantity" class="btn btn-outline-secondary btn-sm">-</button>
-                                        <span id="modal-quantity" class="mx-3">1</span>
-                                        <button type="button" id="modal-increase-quantity" class="btn btn-outline-secondary btn-sm">+</button>
-                                    </div>
-                                    <span class="d-block text-end display-4" id="modal-product-price"></span>
+                    <div class="card">
+                        <div class="modal-image-container">
+                            <img src="" class="card-img-top" alt="" id="modal-product-img">
+                        </div>
+                        <div class="card-body">
+                            <h2 class="card-title display-6 text-truncate"></h2>
+                            <p class="card-text lead"></p>
+                            <span class="badge rounded-pill" id="modal-product-category"></span>
+                            <div class="d-flex align-items-center justify-content-end">
+                                <div class="quantity-container d-flex align-items-center">
+                                    <button type="button" id="modal-decrease-quantity" class="btn btn-outline-secondary btn-sm">-</button>
+                                    <span id="modal-quantity" class="mx-3">1</span>
+                                    <button type="button" id="modal-increase-quantity" class="btn btn-outline-secondary btn-sm">+</button>
                                 </div>
+                                <span class="d-block text-end display-4" id="modal-product-price"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-add-to-cart"><i
-                            class="fa fa-shopping-cart px-1"></i>
-                            Agregar
-                        </button>
-                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-add-to-cart">
+                        <i class="fa fa-shopping-cart px-1"></i>
+                        Agregar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     <!-- Cart Modal -->
     <div class="modal fade modal-lg" id="cart" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="cartLabel">Tus productos</h1>
-            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Titulo</th>
-                  <th scope="col">Categoría</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Precio</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="cart-body">
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th colspan="2" class="text-left">Total</th>
-                  <th></th>
-                  <th></th>
-                  <th id="total-price">$0</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <div class="modal-footer border-0 d-flex justify-content-between">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-            <div class="d-flex align-items-center">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="cartLabel">Tus productos</h1>
+              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="cart-body"></div>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+              <div class="d-flex align-items-center">
+                <div class="me-3">
+                  <strong>Total: </strong><span id="total-price">$0</span>
+                </div>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="clear-cart">Vaciar</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="buy-button">Comprar</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div>     
     <!-- Favorites Modal -->
     <div class="modal fade" id="favorites-modal" tabindex="-1" aria-labelledby="favoritesLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -180,20 +163,7 @@
               <h1 class="modal-title fs-5" id="favoritesLabel">Favoritos</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Título</th>
-                    <th scope="col">Categoría</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody id="favorites-body">
-                  <!-- Favorite products will be populated here -->
-                </tbody>
-              </table>
+            <div class="modal-body" id="favorites-body">
             </div>
             <div class="modal-footer border-0">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
